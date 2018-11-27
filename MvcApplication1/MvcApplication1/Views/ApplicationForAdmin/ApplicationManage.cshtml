@@ -1,0 +1,573 @@
+﻿
+@{
+    Layout = null;
+}
+
+@model ASP.NET_MVC研修.Models.ApplicationInfoModel
+
+<!DOCTYPE html>
+
+<html>
+	<head>
+	<title>検索画面</title>
+    <script src="~/Scripts/jquery-1.10.2.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="/Content/bootstrap.css">
+        <style>
+            
+            /*----------------------------------------------*/
+            /*CSS方向性
+                ①描画範囲はページ固有CSSで定義
+                　→水平、垂直方向に分けて描画調整を定義する。
+
+                ②横位置はページ固有CSSで調整
+                　→bootstrapやcontainerで定義。
+                　　追記：思ったより回り込みが面倒で、全部これで定義出来ないかも。
+                　　　　　ってなると、①と混合するから考えどころ。
+
+                ③要素内サイズなどの調整は全体CSSで定義
+                
+                */
+            /*感想：思ったより似たVERTICALとHORIZONTALの
+                調整が入るので、いくらか書いていけば経験的に法則が分かるかと。
+                分かったら、Vとhのクラス調整するとベターかな。
+                たぶん、やってる感じ発想としては間違っていない。
+                
+                ただ、どうしてもページ固有分が多くなるので、
+                ページ固有での共通VやHで妥協するかは検討したほうがいいかも。
+                でも、統一レイアウトの観点から統一する方がいいし、
+                理論上は出来るはず。
+                
+                回り込みが面倒で、かなり細かくcontainerを調整しないと
+                なんだかんだfloatを個別定義することになる。
+                floatはfloatで諦めて切り出すか、描画位置クラスに盛り込むか？*/
+
+
+            /*----------------------------------------------*/
+            /*brief
+                cコントロール種別
+                コントロール種別ごとに基本デザインを定義
+
+            /*Properties
+                border系
+                font系
+                height系
+                text位置系
+
+                ※暫定：float/clear left（改行用）
+
+            /*note
+                コントロールの共有部を高さ*デザインで切り出し。
+                幅やマージンなどの部分依存のものだけ別切り出し。
+                
+                このクラス内でborder作って継承出来るならそれがきれいだけど、
+                調べた感じ出来ないっぽい。
+                いわゆるCSSでの継承。
+                
+                html側の継承にborder切り分けてもいいけど、
+                目的が「デザイン」「描画位置」を継承して可読性高めることなので
+                あんまりベターではないかな。
+            /*----------------------------------------------*/
+             .sampleBORDER /*これクラスで切り出してCSS内で継承させたい。*/
+            {
+                border-radius: 4px;
+                border-width: 1px;
+                border-color: #589BD5;
+            }
+
+            
+            .cTEXT
+            {
+                border-color:#589BD5;
+                border-radius:4px;
+                border-width:1px;
+                
+                font-size:13px;
+                height: 19.5px;
+                /*暫定*/
+                clear:left;
+		        float:left;
+            }
+
+	        .cLABEL
+	        {
+                font-size:13px;
+                height: 19.5px;
+                /*暫定*/
+                clear:left;
+		        float:left;
+	        }
+
+            .cCHECK
+            {			
+            }
+            .cRADIO
+            {			
+            }
+            .cTEXTAREA
+            {			
+            }       
+            .cBUTTON
+            {
+          	    background-color: #589BD5;
+		        color:#fff;
+		        float:left;
+                border:1.5px solid #43729D;							
+                border-radius:4px;
+                font-size:12px;		
+                height:28px;		
+            }
+            .cFILE
+            {
+            }
+            .cLINK
+            {	
+            }
+            .cDUMMY
+            {	
+                height: 19.5px;
+                visibility:hidden;
+
+                /*暫定*/
+                clear:left;
+		        float:left;
+            }
+            
+            /*改行をこれに頼ってることにより専用化。暫定。*/
+	        .cLABEL_TABLE
+	        {
+                font-size:13px;
+                height: 19.5px;
+                /*暫定*/
+		        float:left;
+	        }
+            
+            .cTEXT_TABLE
+            {
+                border-color:#589BD5;
+                border-radius:4px;
+                border-width:1px;
+                
+                font-size:13px;
+                height: 19.5px;
+                /*暫定*/
+		        float:left;
+            }
+
+
+            /*----------------------------------------------*/
+            /*brief
+                v調整方法
+                垂直方向の描画調整関連を定義
+
+            /*Properties
+                margin-top
+                margin-bottom
+
+            /*note           
+                v stands for VERTICAL
+            /*----------------------------------------------*/
+
+            .vMARGINTOP5 
+            {
+            }
+            
+            .vMARGINBOTs
+            {
+                margin-bottom:1.5px;
+            }
+
+            .vMARGINBOTbs
+            {
+                margin-bottom:10px;
+            }
+
+            .vMARGINTOPBOT5 
+            {
+            }
+
+
+            
+            /*----------------------------------------------*/
+            /*brief
+                h調整方法
+                水平方向の描画調整関連を定義
+
+            /*Properties
+                margin-left
+                margin-right
+                width(%)
+
+            /*note           
+                h stands for HORIZONTAL
+            /*----------------------------------------------*/
+
+            .vNEUTRAL_TEXT
+            {
+                margin-left:2px;
+                width:90%;
+            }
+            
+            .vTABLE_SELECT
+            {
+                margin-right:2px;
+                float:right;
+                width:10%;
+            }
+            /*もっと汎用的な名前にすべき。というか
+                最初は固有かと思ったけど、似たような横調整結構入るっぽい
+             */
+            .vTABLE_HEADER
+            {
+                margin-right:2px;
+                float:right;
+            }
+
+            .vMARGINLEFTs 
+            {
+                margin-left:2px;
+            }
+
+
+
+            /*===========================================ここからページ固有CSSの予定==============================================*/
+
+
+
+            /*----------------------------------------------*/
+            /*brief
+                r識別名称
+                描画領域の定義用
+
+            /*Properties
+
+            /*note           
+                r stands for region
+            /*----------------------------------------------*/
+            
+
+            .rCONTAINER 
+            {
+                margin:0 auto; 
+                min-width:650px;
+                max-width:650px;
+                width:650px;
+            }
+
+
+            .TABLE 
+            {
+                width:100%;
+                border:1.5px solid #589BD5;	
+                border-radius:4px;
+
+                text-align:center;
+                font-size:11px;    
+            	
+            }
+
+            /*全体にかかる（たぶんもともとある標準のthクラス継承？）*/
+            /*テーブル単位で固有CSS起こすのがベターっぽい。ページ単位。
+                ただ、カラム単位で出来ないっぽい？どうしても無理？*/
+            th 
+            {
+                text-align:center;
+            }	      
+            
+                  
+            tr 
+            {
+                height:26px;
+            }
+
+
+						
+        </style>
+	</head>
+	
+<body>
+    
+	<div class="rCONTAINER">
+
+        <form id ="fmAll">
+		    <div class="row vMARGINBOTbs">
+			    <div class="col-xs-1">
+				    <l class="cLABEL vMARGINBOTs">氏名</l>
+				    <l class="cLABEL vMARGINBOTs">所属</l>
+				    <l class="cLABEL vMARGINBOTs">状態</l>
+			    </div>
+			    <div class="col-xs-2">
+				    <l class="cLABEL vMARGINBOTs vNEUTRAL_TEXT">@Model.氏名</l>
+				    <l class="cLABEL vMARGINBOTs vNEUTRAL_TEXT">@Model.所属</l>
+				    <select class="cTEXT vMARGINBOTs vNEUTRAL_TEXT" id="cbxType" name="状態">
+                        <option value ="0" @if (Model != null && Model.状態 == "0") {<text>selected</text>} >すべて</option>
+                        <option value ="1" @if (Model != null && Model.状態 == "1") {<text>selected</text>} >承認済</option>
+                        <option value ="2" @if (Model != null && Model.状態 == "2") {<text>selected</text>} >未承認</option>
+                        <option value ="3" @if (Model != null && Model.状態 == "3") {<text>selected</text>} >差し戻し</option>
+				    </select>
+			    </div>
+			    <div class="col-xs-1">
+				    <l class="cDUMMY vMARGINBOTs">dummy</l>
+				    <l class="cLABEL vMARGINBOTs">役職</l>
+				    <l class="cDUMMY vMARGINBOTs">dummy</l>
+			    </div>
+			    <div class="col-xs-2">
+				    <l class="cDUMMY vMARGINBOTs">dummy</l>
+				    <l class="cLABEL vMARGINBOTs">@Model.役職</l>
+				    <l class="cDUMMY vMARGINBOTs">dummy</l>
+			    </div>
+		    </div>
+        
+            <div id="partial">
+                @Html.Partial("~/views/ApplicationForAdmin/_ApplicationList.cshtml",Model)
+            </div>
+
+        </form>
+	</div>
+
+    @********************************************************************@
+    @*javascript部分*@
+    <script src="~/Scripts/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    //ロード時にイベントリスナを登録
+    //備忘：カッコつけないと紐づけ。
+     window.onload = function () { f_SetEvents(); }
+
+
+    //イベントリスナ登録
+    function f_SetEvents() {
+        //慣れたらvar挟まずに一括で。
+        var cbxType = document.getElementById('cbxType');
+        var cbx表示件数 = document.getElementById('cbx表示件数');
+        cbxType.removeEventListener('change', f_状態変更);
+        cbx表示件数.removeEventListener('change', f_表示件数変更);
+        
+
+        cbxType.addEventListener('change', f_状態変更);
+        cbx表示件数.addEventListener('change', f_表示件数変更);
+
+        //お試し
+        var parents = 'sort';
+        thObj = document.getElementsByTagName('th');
+        matchObj = new RegExp(parents);
+
+        for (i = 0; i < thObj.length; i++) {
+            if (thObj[i].id.match(matchObj)) {
+                thObj[i].removeEventListener('click', f_ソート);
+                thObj[i].addEventListener('click', f_ソート);
+            }
+        }
+        //お試し
+        var parents = 'Row';
+        trObj = document.getElementsByTagName('tr');
+        matchObj = new RegExp(parents);
+
+        for (i = 0; i < trObj.length; i++) {
+            if (trObj[i].id.match(matchObj)) {
+                trObj[i].removeEventListener('click', f_承認画面);
+                trObj[i].addEventListener('click', f_承認画面);
+            }
+        }
+
+
+
+        //デバッグ方法良く分からんけど、たぶんこれnullになるとサイレントでコケる。
+        //なので、暫定的に全部終わった後に描画。
+        var btn次ページ = document.getElementById('btn次ページ');
+        var btn前ページ = document.getElementById('btn前ページ');
+        var btn現ページ = document.getElementById('txt現ページ');
+        btn次ページ.removeEventListener('click', f_次ページ);
+        btn前ページ.removeEventListener('click', f_前ページ);
+        btn現ページ.removeEventListener('change', f_現ページ);
+        btn次ページ.addEventListener('click', f_次ページ);
+        btn前ページ.addEventListener('click', f_前ページ);
+        btn現ページ.addEventListener('change', f_現ページ);
+
+    }
+
+    //状態の変更
+    function f_状態変更() {
+        $.ajax({
+            url: "/ApplicationForAdmin/Find",
+            type: "post",
+            data: $("#fmAll").serialize(),
+
+            success: function (data) {
+                $("#partial").html(data);
+                f_SetEvents();
+            },
+            error: function () {
+                alert("システムエラーが発生しました");
+            }
+        });
+    }
+
+    //表示件数の変更
+    function f_表示件数変更() {
+        $.ajax({
+            url: "/ApplicationForAdmin/GetPage",
+            type: "post",
+            data: $("#fmAll").serialize(),
+
+            success: function (data) {
+                $("#partial").html(data);
+                f_SetEvents();
+            },
+            error: function () {
+                alert("システムエラーが発生しました");
+            }
+        });
+    }
+
+    //ページ変更
+    function f_現ページ() {
+        var selecting = $('#txt現ページ').val();
+
+        $.ajax({
+            url: "/ApplicationForAdmin/MovePage",
+            type: "post",
+            data: JSON.stringify({ 新規ページ数: (Number(selecting)) }),
+            contentType: 'application/json',
+            success: function (data) {
+                $("#partial").html(data);
+                f_SetEvents();
+            },
+            error: function () {
+                alert("システムエラーが発生しました");
+            }
+        });
+    };
+
+     //ページ変更
+    function f_前ページ() {
+        event.preventDefault();
+        var selecting = $('#txt現ページ').val();
+
+        if (selecting == 1) {
+            return;
+        }
+
+        $('#txt現ページ').val(Number(selecting) - 1);
+        $('#btn次ページ').attr("src", "/Images/right_triangle.png");
+
+        $.ajax({
+            url: "/ApplicationForAdmin/MovePage",
+            type: "post",
+            data: JSON.stringify({ 新規ページ数: (Number(selecting) - 1) }),
+            contentType: 'application/json',
+            success: function (data) {
+                $("#partial").html(data);
+                f_SetEvents();
+            },
+            error: function () {
+                alert("システムエラーが発生しました");
+            }
+        });
+    };
+
+    //ページ変更
+    function f_次ページ() {
+        event.preventDefault();
+        var selecting = $('#txt現ページ').val();
+        var maxvalue = $('#txt現ページ option:last-child').val();
+
+        if (selecting == maxvalue) {
+            return;
+        }
+
+        $('#txt現ページ').val(Number(selecting) + 1);
+        $('#btn前ページ').attr("src", "/Images/left_triangle.png");
+
+        $.ajax({
+            url: "/ApplicationForAdmin/MovePage",
+            type: "post",
+            data: JSON.stringify({ 新規ページ数: (Number(selecting) + 1) }),
+            contentType: 'application/json',
+            success: function (data) {
+                $("#partial").html(data);
+                f_SetEvents();
+            },
+            error: function () {
+                alert("システムエラーが発生しました");
+            }
+        });
+    };
+
+        
+    //ソート
+    function f_ソート() {
+        var sort = $(this).find("sort");
+        var order = sort.text().trim();
+        var colName = $(this).text().replace("▲", "").replace("▼", "").trim();
+
+
+
+        if (order == "" || order == "▼") {
+            order = "▲";
+        }
+        else {
+            order = "▼";
+        }
+
+        $('#btn前ページ').attr("src", "/Images/left_triangle_disable.png");
+        $('#txt現ページ').val(1);
+        $('#btn次ページ').attr("src", "/Images/right_triangle.png");
+
+        $.ajax({
+            url: "/ApplicationForAdmin/Sort",
+            type: "post",
+            data: JSON.stringify({ ソート列: colName, ソート順: order }),
+            contentType: 'application/json',
+            success: function (data) {
+                $("#partial").html(data);
+                f_SetEvents();
+
+            },
+            error: function () {
+                alert("システムエラーが発生しました");
+            }
+        });
+
+    }
+
+    //ソート
+        //idに申請idを付与してトリムして取得
+        //テーブルデータ取得は諦め
+    function f_承認画面() {
+
+        var id = $(this).attr('id').trim().slice(4);
+        //idを取得
+        //var parents = 'IDvalue';
+        //tdObj = document.getElementsByTagName('td');
+        //matchObj = new RegExp(parents);
+
+        //for (i = 0; i < trObj.length; i++) {
+        //    if (tdObj[i].id.match(matchObj)) {
+        //        var id = tdObj[i].innerHTML;
+        //    }
+        //}
+
+
+        $.ajax({
+            url: "/ApplicationForAdmin/ApproveDataGet",
+            type: "post",
+            data: JSON.stringify({ 申請ID: id }),
+            contentType: 'application/json',
+            success: function (data) {
+                //$("table.tbl tbody").html("");
+                //$("table.tbl tbody").html(data);
+                window.location.href = "/ApplicationForAdmin/ApplicationApprove";
+            },
+            error: function () {
+                alert("システムエラーが発生しました");
+            }
+        });
+
+    }
+
+    </script>
+
+</body>
+
+
+</html>

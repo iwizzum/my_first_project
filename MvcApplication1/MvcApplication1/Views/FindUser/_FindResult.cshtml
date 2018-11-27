@@ -1,0 +1,125 @@
+﻿@model ASP.NET_MVC研修.Models.FindModel
+@using ASP.NET_MVC研修.Models
+
+<table style="width:100%;">
+    <tr>
+        <td colspan ="5" style="width:auto;border-right:none">
+        @if(Model != null)
+        {
+            <text>総件数:</text><span id="txt総件数">@(  Model.検索結果一覧.Count  )</span><text>件</text>         
+        }
+        else
+        {
+            <text>総件数:</text> <span id="txt総件数">0</span><text>件</text>   
+        }
+        </td>
+        <td style="width:80px;border-left:none;border-right:none;text-align:right">
+            <text>表示件数:</text>
+        </td>
+        <td style="width:60px;border-left:none;text-align:right">
+            <select id="txt表示件数" name="表示件数" style="width:60px;float:right">
+                <option value ="0" @if(Model != null && Model.表示件数 == 0){<text>selected</text>}>すべて</option>
+                <option value ="5" @if(Model != null && Model.表示件数 == 5){<text>selected</text>}>5件</option>
+                <option value ="10" @if(Model != null && Model.表示件数 == 10){<text>selected</text>}>10件</option>
+                <option value ="20" @if(Model != null && Model.表示件数 == 20){<text>selected</text>}>20件</option>
+                <option value ="50" @if(Model != null && Model.表示件数 == 50){<text>selected</text>}>50件</option>
+                <option value ="100" @if(Model != null && Model.表示件数 == 100){<text>selected</text>}>100件</option>
+            </select>
+        </td>
+    </tr>
+</table>
+
+@if(Model != null){	
+    
+<table id="検索結果一覧">						
+	<tr>					
+		<td>選択</td>
+        <td style="width:90px" onclick="sort(this)" >	
+    	    ユーザーID
+	        <br />
+	        <span>@if (Model.ソート列=="ユーザーID"){<text>@Model.ソート順</text>} </span>
+        </td>	
+        <td style="width:90px" onclick="sort(this)" >	
+    	    氏名
+	        <br />
+	        <span>@if (Model.ソート列=="氏名"){<text>@Model.ソート順</text>} </span>
+        </td>	
+        <td style="width:90px" onclick="sort(this)" >	
+    	    電話番号
+	        <br />
+	        <span>@if (Model.ソート列=="電話番号"){<text>@Model.ソート順</text>} </span>
+        </td>				
+        <td style="width:90px" onclick="sort(this)" >	
+    	    郵便番号
+	        <br />
+	        <span>@if (Model.ソート列=="郵便番号"){<text>@Model.ソート順</text>} </span>
+        </td>
+        <td style="width:90px" onclick="sort(this)" >	
+    	    住所
+	        <br />
+	        <span>@if (Model.ソート列=="住所"){<text>@Model.ソート順</text>} </span>
+        </td>
+
+	</tr>		  					
+
+    @if(Model != null && Model.表示一覧 != null) {
+		
+        foreach(FindRowModel row in Model.表示一覧) {		
+	    <tr>	
+		    <td>選択</td>
+		    <td>@row.ユーザーID</td>
+		    <td>@row.氏名</td>
+		    <td>@row.電話番号</td>
+		    <td>@row.郵便番号</td>
+		    <td>@row.住所</td>
+	    </tr>
+        }	
+    }
+</table>
+    
+    if(Model.表示一覧 != null && Model.表示一覧.Count < Model.検索結果一覧.Count){
+        <table id="tb改ページ" style="width:1px;height:50px;float:right">					
+	    <tr style="height:30px;vertical-align:bottom">				
+		    <td style="width:82%;text-align:right">			
+			    @if (Model.現ページ == 1)		
+			    {		
+			    <input type="image" src="~/Images/left_triangle_disable.png" id="btn前ページ" style="width:30px;font-weight:bold;outline:none"  />
+			    }		
+			    else		
+			    {		
+			    <input type="image" src="~/Images/left_triangle.png" id="btn前ページ" style="width:30px;font-weight:bold;outline:none" />	
+			    }		
+		    </td>			
+		    <td style="width:60px">			
+			    <select name="現ページ" id="txt現ページ" style="width:60px;margin-bottom:5px">		
+			    @if (Model.表示件数 != 0)		
+			    {		
+			    for (int i = 1; i <= Model.検索結果一覧.Count / Model.表示件数 + 1; i++)		
+			    {		
+				    if(i == Model.現ページ)	
+				    {	
+				    <option selected value="@(i)">@(i)</option>	
+				    }	
+				    else	
+				    {	
+				    <option value="@(i)">@(i)</option>	
+				    }	
+			    }		
+			    }		
+			    </select>		
+		    </td>			
+		    <td>			
+			    @if (Model.現ページ == (Model.検索結果一覧.Count / Model.表示件数 + 1))		
+			    {		
+			    <input type="image" src="~/Images/right_triangle_disable.png" id="btn次ページ" style="width:30px;font-weight:bold;outline:none" />	
+			    }		
+			    else		
+			    {		
+			    <input type="image" src="~/Images/right_triangle.png" id="btn次ページ" style="width:30px;font-weight:bold;outline:none" />					
+			    }		
+		    </td>			
+	    </tr>			
+        </table>
+ }
+
+}

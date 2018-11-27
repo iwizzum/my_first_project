@@ -1,0 +1,55 @@
+﻿@model ASP.NET_MVC研修.Models.Shared.MessageModel
+
+<style type="text/css">			
+		.CONTAINER		
+		{		
+			width:500px;
+            height:1000px;	
+			margin:0 auto;	
+
+		}	
+        
+        .BUTTON
+        {
+          	background-color: #589BD5;
+		    color:#fff;
+            border:1.5px solid #43729D;							
+            border-radius:4px;
+            font-size:12px;		
+            height:30px;	
+            width:200px;	
+            text-align:center;
+            margin:0 auto;
+        }
+
+        .LABEL
+        {
+            width:100%;
+            height:auto;
+            text-align:center;	
+            margin:0 auto;
+        }
+</style>
+
+<body>												
+        
+    @*丸コピ。たぶん中身の改行コードを直してるだけ。なんかhtml記法でモデルに突っ込んだ方が分かりやすい気もするが。とりあえず両対応*@
+    <p name="お知らせ" id="lblお知らせ" class="LABEL" style="margin-top:120px;">
+        @Html.Raw(Html.Encode(Model.Message).Replace("\r\n", "<br/>"))
+    </p>
+    <br/>
+
+    @*ボタン設定。サンプルのボタンクラスどこから取ってきてるのか不明。とりあえずここに書く。*@
+    @*コードはhtmlに書き込み。javascriptはこの方法だと設定出来ない？（htmlしか弄れないので）*@      
+    @*というか今更だけどcshtmlは@最優先っぽい？省略記法で""内に行けるだけかもしれないけど*@  
+    @*input要素はtext-align出来ない。解決策として、div要素にすることでdiv側で調整かけたのに乗せられる。*@		
+    <div style ="text-align:center;margin-bottom:120px">    
+        <input type="button" class="BUTTON" id="btn_@Model.ButtonCaption" value="@Model.ButtonCaption" onclick="@Model.ButtonAction" />	
+	</div>
+    		
+    @*表記　たぶんlayoutに最終的に入るはず。*@
+    <p class="LABEL" style="text-align:center">Copyright ©2015-2020 G&T Inc. All Rights Reserved.</p>									
+				
+</body>	
+				
+				

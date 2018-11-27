@@ -1,0 +1,60 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>メール送信完了画面</title>
+        <style type ="text/css">
+        .tit
+        {
+            
+            margin-top:0px;
+            margin-bottom:10px;
+            text-align:center;
+            background-color:#3399cc;
+            color:white;
+            height:50px
+        }
+        .CONTAINER	
+        {	
+            min-width :200px;
+	        width:300px;
+	        margin:0 auto;
+	        margin-bottom:5px;
+        }
+        .BUTTON	
+        {
+            background-color:#3399cc;
+            border-radius: 10px;
+            color:white;
+            width:150px;
+	        border-color:#3399cc;
+        }
+        </style>
+</head>
+
+<body>
+<header>
+	    <h1 class = "tit">メール送信完了</h1>
+</header>
+ <div class="CONTAINER">
+    <span id ="お知らせビュー">■メール送信が完了しました</span>
+    <br />
+    <input type="button" class="BUTTON" name="閉じる" id="btn閉じる" value="閉じる" />
+</div>
+</body>
+</html>
+
+<script type="text/ecmascript">
+
+    //閉じるボタンクリック　ウインドウを閉じる
+    $("#btn閉じる").click(function () {
+        window.close();
+    })
+
+</script>
