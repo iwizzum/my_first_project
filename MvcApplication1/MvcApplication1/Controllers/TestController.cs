@@ -12,6 +12,7 @@ namespace MvcApplication1.Controllers
         // GET: /Test/
         public ActionResult Index()
         {
+            //a
             return View();
         }
         [HttpPost]
