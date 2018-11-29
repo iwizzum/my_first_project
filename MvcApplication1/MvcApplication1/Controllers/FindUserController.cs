@@ -11,7 +11,7 @@ using ASP.NET_MVC研修.Controllers.Shared;
 
 namespace ASP.NET_MVC研修.Controllers
 {
-    // FindUserController
+    // A) FindUserController
     public class FindUserController : MyController
     {
         // Index
