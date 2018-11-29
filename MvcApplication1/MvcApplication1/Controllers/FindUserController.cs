@@ -13,13 +13,14 @@ namespace ASP.NET_MVC研修.Controllers
 {
     public class FindUserController : MyController
     {
-        //
+        // Index
         // GET: /Find/
         public ActionResult Index()
         {
             return View("Find");
         }
 
+        // Search
          [HttpPost]
         public ActionResult Search(FindConditionModel Condition)
         {
