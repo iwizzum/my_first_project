@@ -17,6 +17,7 @@ namespace MvcApplication1.Controllers
         [HttpPost]
         public ActionResult test1()
         {
+            //b
             return View();
         }
 
